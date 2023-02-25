@@ -1,33 +1,62 @@
 import { ContactForm } from "./ContactForm/ContactForm";
 import { Component } from "react";
 import { ContactList } from "./ContactList/ContactList";
+import { Filter } from "./Filter/Filter";
+import { GlobalStyle } from "./GlobalStyles";
+import { Layout } from "./Layout";
 
 export class App extends Component {
   state = {
-    contacts: [
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
-    {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-}
+    contacts: [],
+    filter: "",
+  }
 
   addContact = (newContact) => {
+    const sameName = this.state.contacts.map(contact => contact.name).includes(newContact.name);
+
+    if (sameName) {
+      alert(`${newContact.name} is already in contacts`)
+    } else {
+      this.setState(prevState => {
+        return {
+          contacts: [...prevState.contacts, newContact],
+        }
+      })
+    };
+  }
+
+  filterContact = (filter) => {
+this.setState({filter})
+  }
+
+  findContact = () => {
+    const { contacts, filter } = this.state;
+    return contacts.filter((contacts) =>
+      contacts.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+
+  deleteContact = (contactId) => {
     this.setState(prevState => {
       return {
-        contacts: [...prevState.contacts, newContact],
-      }
-    });
+    contacts: prevState.contacts.filter(contact => contact.id !== contactId)
+  }
+})
   }
   
   render() {
+    const findedContacts = this.findContact();
     return (
-    <div>
-      <h1>Phonebook</h1>
+      <Layout>
+        <GlobalStyle/>
+        <h1>Phonebook</h1>
         <ContactForm onSave={this.addContact} />
 
         <h2>Contacts</h2>
-        <ContactList contacts={this.state.contacts} />
-    </div>
-  )};
-};
+          <Filter value={this.state.filter} onFind={this.filterContact} />
+        <ContactList contacts={findedContacts} onDelete={this.deleteContact} />
+
+      </Layout>
+    )
+  }
+}

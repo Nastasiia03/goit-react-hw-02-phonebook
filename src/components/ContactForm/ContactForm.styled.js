@@ -33,6 +33,8 @@ color: #24292E;
 cursor: pointer;
 font-size: 14px;
 font-weight: 500;
+&:hover {
+  background-color: #8cb6fa;
 }
 `
 

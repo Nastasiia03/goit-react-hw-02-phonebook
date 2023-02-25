@@ -1,6 +1,7 @@
 import { Formik } from 'formik';
 import { Button, ErrorMessage, Field, Form, FormField } from './ContactForm.styled';
 import { nanoid } from 'nanoid';
+import PropTypes from "prop-types";
 
 function validateName(value) {
    let error;
@@ -27,10 +28,10 @@ export const ContactForm = ({onSave}) => {
     <Formik
             initialValues={{ name: "", number: "" }}
             onSubmit={(values, actions) => {
-                console.log(values)
-                onSave({...values, id: nanoid()})
+              onSave({ ...values, id: nanoid(), });
+              actions.resetForm();
             }}>
-    {({ errors, touched, isValidating }) => (
+    {({ errors, touched }) => (
     <Form>
         <FormField>
             Name
@@ -47,4 +48,9 @@ export const ContactForm = ({onSave}) => {
             </Form>
             )}
     </Formik>
-)}
+  )
+}
+
+ContactForm.propTypes = {
+  onSave: PropTypes.func.isRequired,
+}
